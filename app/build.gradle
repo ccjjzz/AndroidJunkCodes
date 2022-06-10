@@ -1,0 +1,104 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+if (PLUGIN_ENABLE.toBoolean()) {
+    apply plugin: 'android-junk-code'
+}
+apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion 31
+
+    defaultConfig {
+        applicationId "cn.hx.plugin.junkcode.demo"
+        minSdkVersion 16
+        targetSdkVersion 31
+        versionCode 1
+        versionName "1.0"
+        multiDexEnabled true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+
+    flavorDimensions 'PRODUCT'
+
+    productFlavors {
+        free {
+            dimension 'PRODUCT'
+        }
+        pro {
+            dimension 'PRODUCT'
+        }
+    }
+
+    applicationVariants.all { variant ->
+        def mergedFlavor = variant.mergedFlavor
+        switch (variant.flavorName) {
+            case "free":
+                switch (variant.buildType.name) {
+                    case "debug":
+                        mergedFlavor.manifestPlaceholders += ["API_KEY": "appKey1"]
+                        break
+                    case "release":
+                        mergedFlavor.manifestPlaceholders += ["API_KEY": "appKey2"]
+                        break
+                }
+                break
+            case "pro":
+                switch (variant.buildType.name) {
+                    case "debug":
+                        mergedFlavor.manifestPlaceholders += ["API_KEY": "appKey3"]
+                        break
+                    case "release":
+                        mergedFlavor.manifestPlaceholders += ["API_KEY": "appKey4"]
+                        break
+                }
+                break
+        }
+    }
+}
+
+if (PLUGIN_ENABLE.toBoolean()) {
+    androidJunkCode {
+        def config = {
+            packageBase = "cn.hx.plugin.ui"
+            packageCount = 30
+            activityCountPerPackage = 30
+            excludeActivityJavaFile = false
+            otherCountPerPackage = 50
+            methodCountPerClass = 20
+            resPrefix = "junk_"
+            drawableCount = 300
+            stringCount = 300
+        }
+        variantConfig {
+            freeRelease config
+            proRelease config
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.core:core-ktx:1.6.0'
+    implementation 'androidx.appcompat:appcompat:1.3.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+}
