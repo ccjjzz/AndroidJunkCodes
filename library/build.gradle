@@ -4,12 +4,13 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.18.0'
+//        classpath 'com.vanniktech:gradle-maven-publish-plugin:0.18.0'
     }
 }
 
 apply plugin: 'groovy'
-apply plugin: "com.vanniktech.maven.publish"
+//apply plugin: "com.vanniktech.maven.publish"
+apply from: "publication.gradle"
 
 java {
     sourceCompatibility JavaVersion.VERSION_1_8

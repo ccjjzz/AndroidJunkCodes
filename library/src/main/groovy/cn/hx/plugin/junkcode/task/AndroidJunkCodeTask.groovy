@@ -80,11 +80,11 @@ class AndroidJunkCodeTask extends DefaultTask {
             case 0:
                 methodBuilder.addStatement("long now = \$T.currentTimeMillis()", System.class)
                         .beginControlFlow("if (\$T.currentTimeMillis() < now)", System.class)
-                        .addStatement("\$T.out.println(\$S)", System.class, "Time travelling, woo hoo!")
+                        .addStatement("\$T.out.println(\$S)", System.class, "Time travelling, woo hoo!" + generateName(1))
                         .nextControlFlow("else if (\$T.currentTimeMillis() == now)", System.class)
-                        .addStatement("\$T.out.println(\$S)", System.class, "Time stood still!")
+                        .addStatement("\$T.out.println(\$S)", System.class, "Time stood still!" + generateName(1))
                         .nextControlFlow("else")
-                        .addStatement("\$T.out.println(\$S)", System.class, "Ok, time still moving forward")
+                        .addStatement("\$T.out.println(\$S)", System.class, "Ok, time still moving forward" + generateName(1))
                         .endControlFlow()
                 break
             case 1:
@@ -109,13 +109,13 @@ class AndroidJunkCodeTask extends DefaultTask {
                 methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                         .returns(void.class)
                         .addParameter(String[].class, "args")
-                        .addStatement("\$T.out.println(\$S)", System.class, "Hello")
+                        .addStatement("\$T.out.println(\$S)", System.class, generateName(1))
                 break
             default:
                 methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                         .returns(void.class)
                         .addParameter(String[].class, "args")
-                        .addStatement("\$T.out.println(\$S)", System.class, "Hello")
+                        .addStatement("\$T.out.println(\$S)", System.class, generateName(1))
         }
     }
 
@@ -214,7 +214,11 @@ class AndroidJunkCodeTask extends DefaultTask {
         FileWriter writer
         try {
             writer = new FileWriter(layoutFile)
-            def template = ResTemplate.LAYOUT_TEMPLATE
+//            def template = ResTemplate.LAYOUT_TEMPLATE
+            def binding = [
+                    id : name,
+            ]
+            def template = makeTemplate(ResTemplate.LAYOUT_TEMPLATE, binding)
             writer.write(template.toString())
         } catch (Exception e) {
             e.printStackTrace()
