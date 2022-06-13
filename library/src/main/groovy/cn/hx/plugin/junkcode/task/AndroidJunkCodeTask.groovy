@@ -80,11 +80,11 @@ class AndroidJunkCodeTask extends DefaultTask {
             case 0:
                 methodBuilder.addStatement("long now = \$T.currentTimeMillis()", System.class)
                         .beginControlFlow("if (\$T.currentTimeMillis() < now)", System.class)
-                        .addStatement("\$T.out.println(\$S)", System.class, "Time travelling, woo hoo!" + generateName(1))
+                        .addStatement("\$T.out.println(\$S)", System.class, "Time travelling, woo hoo!" + generateName(0))
                         .nextControlFlow("else if (\$T.currentTimeMillis() == now)", System.class)
-                        .addStatement("\$T.out.println(\$S)", System.class, "Time stood still!" + generateName(1))
+                        .addStatement("\$T.out.println(\$S)", System.class, "Time stood still!" + generateName(0))
                         .nextControlFlow("else")
-                        .addStatement("\$T.out.println(\$S)", System.class, "Ok, time still moving forward" + generateName(1))
+                        .addStatement("\$T.out.println(\$S)", System.class, "Ok, time still moving forward" + generateName(0))
                         .endControlFlow()
                 break
             case 1:
@@ -109,13 +109,13 @@ class AndroidJunkCodeTask extends DefaultTask {
                 methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                         .returns(void.class)
                         .addParameter(String[].class, "args")
-                        .addStatement("\$T.out.println(\$S)", System.class, generateName(1))
+                        .addStatement("\$T.out.println(\$S)", System.class, generateName(0))
                 break
             default:
                 methodBuilder.addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                         .returns(void.class)
                         .addParameter(String[].class, "args")
-                        .addStatement("\$T.out.println(\$S)", System.class, generateName(1))
+                        .addStatement("\$T.out.println(\$S)", System.class, generateName(0))
         }
     }
 
@@ -128,7 +128,7 @@ class AndroidJunkCodeTask extends DefaultTask {
         def javaDir = new File(outDir, "java")
         def className = activityPreName.capitalize() + "Activity"
         def layoutName = "${config.resPrefix.toLowerCase()}${packageName.replace(".", "_")}_activity_${activityPreName}"
-        generateLayout(layoutName)
+        generateLayout("${config.resPrefix.toLowerCase()}_activity_${activityPreName}")
         if (!config.excludeActivityJavaFile) {
             def typeBuilder = TypeSpec.classBuilder(className)
             typeBuilder.superclass(ClassName.get("android.app", "Activity"))
