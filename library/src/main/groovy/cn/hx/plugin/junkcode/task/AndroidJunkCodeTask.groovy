@@ -127,8 +127,9 @@ class AndroidJunkCodeTask extends DefaultTask {
     void generateActivity(String packageName, String activityPreName) {
         def javaDir = new File(outDir, "java")
         def className = activityPreName.capitalize() + "Activity"
-        def layoutName = "${config.resPrefix.toLowerCase()}${packageName.replace(".", "_")}_activity_${activityPreName}"
-        generateLayout("${config.resPrefix.toLowerCase()}_activity_${activityPreName}")
+        //def layoutName = "${config.resPrefix.toLowerCase()}${packageName.replace(".", "_")}_activity_${activityPreName}"
+        def layoutName = "${config.resPrefix.toLowerCase()}_activity_${activityPreName}"
+        generateLayout(layoutName)
         if (!config.excludeActivityJavaFile) {
             def typeBuilder = TypeSpec.classBuilder(className)
             typeBuilder.superclass(ClassName.get("android.app", "Activity"))
